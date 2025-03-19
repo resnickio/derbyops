@@ -38,7 +38,6 @@ out/
 
 # Docker
 .docker/
-docker-compose.override.yml
 
 # Database
 *.db
@@ -46,7 +45,6 @@ docker-compose.override.yml
 *.sqlite3
 
 # Temporary files
-tmp/
 temp/
 .cache/
 
