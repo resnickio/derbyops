@@ -1,113 +1,155 @@
-# DerbyOps API
+﻿# DerbyOps
 
-A RESTful API for managing roller derby events and leagues.
+## 📌 Overview
+DerbyOps is an **open-source, API-first roller derby league management platform** designed for **self-hosting** or as a **SaaS solution**. It helps leagues **organize memberships, schedule events, track attendance, manage teams, and more!**
 
-## Features
+## 🚀 Features
+- **Role-Based Access Control (RBAC)**: Different access levels for admins, staff, officials, and members.
+- **API-First Design**: RESTful API with JWT authentication & API key support.
+- **Scheduling & Attendance**: Calendar-based event tracking with attendance check-ins.
+- **Team & Roster Management**: Customizable teams, positions, and bout tracking.
+- **Gameday Staffing**: Assigning officials, referees, and volunteers.
+- **Internationalization Support**: Built with i18n in mind.
 
-- User authentication and authorization
-- CRUD operations for derby events
-- User management
-- JWT-based authentication
-- PostgreSQL database
-- RESTful API design
-
-## Prerequisites
-
-- Go 1.21 or later
-- PostgreSQL 14 or later
-- Make (optional, for using Makefile commands)
-
-## Setup
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/resnickio/derbyops.git
-   cd derbyops
-   ```
-
-2. Install dependencies:
-   ```bash
-   go mod download
-   ```
-
-3. Create a PostgreSQL database:
-   ```sql
-   CREATE DATABASE derbyops;
-   ```
-
-4. Copy the environment file and update the values:
-   ```bash
-   cp .env.example .env
-   ```
-
-5. Update the `.env` file with your database credentials and JWT secret.
-
-## Running the Application
-
-1. Start the server:
-   ```bash
-   go run main.go
-   ```
-
-2. The server will start on `http://localhost:8080` by default.
-
-## API Endpoints
-
-### Authentication
-
-- `POST /api/v1/auth/register` - Register a new user
-- `POST /api/v1/auth/login` - Login user
-- `POST /api/v1/auth/logout` - Logout user
-
-### Users
-
-- `GET /api/v1/users` - Get all users
-- `GET /api/v1/users/:id` - Get user by ID
-- `PUT /api/v1/users/:id` - Update user
-- `DELETE /api/v1/users/:id` - Delete user
-
-### Derbies
-
-- `GET /api/v1/derbies` - Get all derbies
-- `POST /api/v1/derbies` - Create new derby
-- `GET /api/v1/derbies/:id` - Get derby by ID
-- `PUT /api/v1/derbies/:id` - Update derby
-- `DELETE /api/v1/derbies/:id` - Delete derby
-
-## Development
-
-### Project Structure
+## 📂 Project Structure
+```
+derbyops/
+│── .github/                # GitHub workflows (CI/CD)
+│── api/                    # Backend API (Golang)
+│   ├── handlers/           # API route handlers
+│   ├── auth/               # Authentication (JWT, API Keys)
+│   ├── middleware/         # Middleware (RBAC, rate limiting, logging)
+│   ├── models/             # Database models (GORM)
+│   ├── database/           # Database connection & migrations
+│   ├── services/           # Business logic services
+│   ├── routes/             # Route registration
+│   ├── config/             # Config files (YAML, ENV parsing)
+│   ├── tests/              # Unit & integration tests
+│   ├── main.go             # Main application entrypoint
+│── web/                    # Web frontend (React, Next.js)
+│   ├── src/                # Source code
+│   ├── components/         # Reusable UI components
+│   ├── pages/              # Page-based routing (Next.js)
+│   ├── hooks/              # React Hooks
+│   ├── styles/             # CSS, Tailwind, etc.
+│   ├── tests/              # Unit & integration tests
+│   ├── package.json        # Frontend dependencies
+│   ├── tsconfig.json       # TypeScript config
+│   ├── next.config.js      # Next.js config
+│── mobile/                 # Mobile app (React Native / Swift & Kotlin)
+│   ├── ios/                # iOS app (Swift)
+│   ├── android/            # Android app (Kotlin)
+│   ├── src/                # React Native components (if hybrid approach)
+│   ├── package.json        # Mobile dependencies
+│   ├── tests/              # Unit & integration tests
+│── infra/                  # Infrastructure & deployment
+│   ├── docker/             # Docker configuration
+│   ├── helm/               # Helm charts for Kubernetes
+│   ├── terraform/          # IaC (if needed for cloud setup)
+│── migrations/             # Database migration scripts
+│── docs/                   # Documentation
+│   ├── api/                # API documentation (OpenAPI / Swagger)
+│   ├── dev/                # Development guidelines
+│   ├── user/               # User guides
+│   ├── contributing.md     # Contribution guidelines
+│── tests/                  # Global tests (end-to-end, API, integration)
+│── scripts/                # Utility scripts (DB resets, setup scripts)
+│── .env.example            # Example environment variables
+│── .gitignore              # Git ignore file
+│── docker-compose.yml      # Local Docker setup
+│── Dockerfile              # Backend Docker build file
+│── README.md               # Project overview
 
 ```
-.
-├── api/
-│   ├── auth/        # Authentication related code
-│   ├── database/    # Database connection and setup
-│   ├── handlers/    # HTTP request handlers
-│   ├── middleware/  # Custom middleware
-│   └── models/      # Data models
-├── .env             # Environment variables
-├── .gitignore      # Git ignore file
-├── go.mod          # Go module file
-├── main.go         # Application entry point
-└── README.md       # Project documentation
+
+## 🛠️ Tech Stack
+- **Backend**: Golang (Gin Framework)
+- **Database**: PostgreSQL
+- **Frontend**: React (Future)
+- **Mobile**: Swift (iOS) & Kotlin (Android) (Future)
+- **Deployment**: Docker, Helm (Kubernetes support)
+
+## 📜 Requirements & Business Rules
+### **1. User Roles & Permissions**
+- **Admin**: Full control over league settings, teams, events, and user management.
+- **Staff**: Can create and manage events, approve attendance.
+- **Officials & NSOs**: Can access bout assignments and officiating schedules.
+- **Members (Skaters)**: Limited access, can view schedules and check attendance.
+
+### **2. Membership Management**
+- Users must provide **legal name, derby name, email, phone, emergency contact, and WFTDA insurance number**.
+- Leagues can define **custom fields** for additional member information.
+- Memberships can have different **statuses** (active, suspended, retired, guest, alumni).
+
+### **3. Scheduling & Attendance**
+- Events can be **practices, games, meetings, or fundraisers**.
+- **Event visibility is role-based** (e.g., only referees see officiating schedules).
+- Attendance can be tracked via **printed sign-in sheets, QR code scans, or passphrase-based check-ins**.
+
+### **4. Team & Roster Management**
+- Users can belong to **multiple teams** (home team, travel team, special events).
+- Positions are tracked separately for each team (e.g., a skater may be a jammer on one team and a blocker on another).
+- Custom team categories (home teams, travel teams, official crews, NSO crews).
+
+### **5. Gameday Staffing & Bout Management**
+- Events may have **multiple bouts**, each with different team combinations.
+- Referees and NSOs may be assigned across **multiple bouts in a tournament**.
+- Leagues can define **custom roles** for staffing (head referee, penalty tracker, scoreboard operator, etc.).
+
+### **6. Security & Compliance**
+- **GDPR-compliant** data handling for European leagues.
+- **Password hashing** with bcrypt.
+- **API security** enforced with JWT authentication and API keys.
+- Audit logs track important actions (user role changes, event updates).
+
+## Installation & Setup
+
+```
+# Clone the repository
+git clone https://github.com/your-org/derbyops.git
+cd derbyops
+
+# Set up environment variables
+cp .env.example .env
+
+# Start services
+docker-compose up --build
 ```
 
-### Adding New Features
+## 🔧 Installation & Setup
+### **1️⃣ Clone the Repository**
+```sh
+git clone https://github.com/your-org/derbyops.git
+cd derbyops
+```
 
-1. Create new models in `api/models/`
-2. Add handlers in `api/handlers/`
-3. Update routes in `api/handlers/api.go`
-4. Add any necessary middleware in `api/middleware/`
+### **2️⃣ Set Up Environment Variables**
+Copy the `.env.example` file to `.env` and configure it:
+```sh
+cp .env.example .env
+```
 
-## Contributing
+### **3️⃣ Run with Docker (Recommended)**
+```sh
+docker-compose up --build
+```
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+### **4️⃣ Run Locally (Go)**
+```sh
+go run api/main.go
+```
 
-## License
+## 🛠️ Development
+- **Linting**: `golangci-lint run`
+- **Tests**: `go test ./tests`
+- **Database Migrations**: `migrate -path migrations -database "postgres://user:pass@localhost/dbname?sslmode=disable" up`
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+## 🤝 Contributing
+We welcome contributors! Feel free to submit PRs, file issues, and help improve DerbyOps.
+
+## 📜 License
+**MIT License** - Open source and free to use.
+
+## 📬 Contact
+For questions or support, open an issue or reach out via GitHub discussions.
+
