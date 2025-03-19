@@ -1,0 +1,41 @@
+linters:
+  enable:
+    - gofmt
+    - govet
+    - golint
+    - gosimple
+    - staticcheck
+    - errcheck
+    - ineffassign
+    - unconvert
+    - misspell
+    - unparam
+
+linters-settings:
+  govet:
+    check-shadowing: true
+  golint:
+    min-confidence: 0.8
+  gofmt:
+    simplify: true
+  misspell:
+    locale: US
+
+run:
+  deadline: 5m
+  tests: true
+  modules-download-mode: readonly
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - errcheck
+        - gosec
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+output:
+  format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true 
