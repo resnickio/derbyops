@@ -1,0 +1,62 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Go specific
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+/vendor/
+
+# IDE specific
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*.bak
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+tmp/
+
+# Build output
+dist/
+build/
+bin/
+out/
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary files
+tmp/
+temp/
+.cache/
+
+# Coverage reports
+coverage.txt
+
+# Dependency directories
+node_modules/
+bower_components/
+
+# Local development
+local/
+dev/ 
